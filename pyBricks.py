@@ -35,7 +35,7 @@ ball.color('white')
 ball.penup()
 ball.goto(0,-239)
 ball.setheading(random.randint(20,160))
-ballspeed = 0.04
+ballspeed = 0.1
 
 # Score
 
@@ -55,15 +55,26 @@ startmessage.speed(0)
 startmessage.color("white")
 startmessage.shape("blank")
 startmessage.penup()
-startmessage.setposition(0,25)
+startmessage.setposition(0,0)
 startmessage.pendown()
-startmessage.write("Press SPACE To Start, \nUse the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
+startmessage.write("Press SPACE To Start, \n\nUse the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
 
 # Bricks
 
+def makeRow(x,y):
+    for i in range(8):
+        brick = turtle.Turtle()
+        brick.speed(0)
+        brick.shape('square')
+        brick.shapesize(stretch_len=3.5, stretch_wid=1.5)
+        brick.color('white')
+        brick.penup()
+        brick.goto(x + 95*i,y)
+        brick.pendown()
 
-
-
+makeRow(-335,230)
+makeRow(-335,180)
+makeRow(-335,130)
 
 # Functions 
 
@@ -107,11 +118,13 @@ wn.update()
 GAME = True
 gameContinue = False
 
+
 # Main Loop  
 while GAME:
 
     wn.update()
-    #ball.forward(ballspeed)
+
+    # Start the Ball
 
     if gameContinue:
         ball.forward(ballspeed)
