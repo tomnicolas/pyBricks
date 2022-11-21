@@ -25,17 +25,25 @@ ball.setheading(random.randint(20,160))
 ballspeed = 0.04
 
 # Score
+score = turtle.Turtle()
+score.speed(0)
+score.color("white")
+score.shape("blank")
+score.penup()
+score.setposition(320,260)
+score.pendown()
+score.write("Score = 0", align = "center", font = ("Fira code", 12))
+
+# Start message
+
 startmessage = turtle.Turtle()
 startmessage.speed(0)
 startmessage.color("white")
 startmessage.shape("blank")
 startmessage.penup()
-startmessage.setposition(0,75)
+startmessage.setposition(0,25)
 startmessage.pendown()
-startmessage.write("", align = "center", font = ("Courier", 12))
-
-# Level
-
+startmessage.write("", align = "center", font = ("Fira code", 12))
 
 
 # Bricks
@@ -94,7 +102,7 @@ while True:
 
     
     if ball.ycor() < -300:
-        startmessage.write("Game Over", align = "center", font = ("Courier", 12))
+        startmessage.write("Game Over", align = "center", font = ("Fira code", 24, 'normal'))
     
     
     if ball.xcor() < -395 or ball.xcor() > 395:
@@ -102,5 +110,5 @@ while True:
 
     # Paddle and Ball collisions
 
-    if ball.ycor() < -245 and (ball.xcor() < paddle.xcor() +48 and ball.xcor() > paddle.xcor() -48):
+    if (ball.ycor() < -245 and ball.ycor() > -260) and (ball.xcor() < paddle.xcor() +48 and ball.xcor() > paddle.xcor() -48):
         ball.setheading(0 - ball.heading())
