@@ -4,6 +4,7 @@
 import turtle
 import random
 
+
 # Window Setup
 
 wn = turtle.Screen()
@@ -23,6 +24,7 @@ paddle.color('white')
 paddle.penup()
 paddle.goto(0,-250)
 
+
 # Ball
 
 ball = turtle.Turtle()
@@ -36,6 +38,7 @@ ball.setheading(random.randint(20,160))
 ballspeed = 0.04
 
 # Score
+
 score = turtle.Turtle()
 score.speed(0)
 score.color("white")
@@ -54,7 +57,7 @@ startmessage.shape("blank")
 startmessage.penup()
 startmessage.setposition(0,25)
 startmessage.pendown()
-startmessage.write("Press SPACE To Start", align = "center", font = ("Fira code", 12))
+startmessage.write("Press SPACE To Start, \nUse the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
 
 # Bricks
 
@@ -76,33 +79,36 @@ def paddle_right():
         x += 10
         paddle.setx(x)
 
-gameContinue = False
-
 def start_game():
     global gameContinue
     gameContinue = True
 
 def restart_game():
-    ball.goto(paddle.xcor(),(paddle.ycor() +10))
+    ball.goto(0,-239)
+    paddle.goto(0,-250)
     ball.setheading(random.randint(20,160))
     global gameContinue
     gameContinue = False
+    startmessage.write("GAME OVER,\nto Restart, press SPACE,\nto Quit, press ESC", align = "center", font = ("Fira code", 12))
 
-
-
+def quit_game():
+    global GAME
+    GAME = False
 
 # Keyboard binding
 
 wn.onkeypress(paddle_left, 'Left')
 wn.onkeypress(paddle_right, 'Right')
 wn.onkeypress(start_game, 'space')
+wn.onkeypress(quit_game, 'Escape')
 wn.listen()
-
-#move_one_step()
 wn.update()
 
-# Main Lopp  
-while True:
+GAME = True
+gameContinue = False
+
+# Main Loop  
+while GAME:
 
     wn.update()
     #ball.forward(ballspeed)
@@ -117,8 +123,6 @@ while True:
         ball.setheading(360 - ball.heading())
     
     if ball.ycor() < -300:
-        startmessage.write("Game Over", align = "center", font = ("Fira code", 24, 'normal'))
-        gameContinue = False    
         restart_game()
     
     if ball.xcor() < -390 or ball.xcor() > 390:
@@ -132,5 +136,5 @@ while True:
     if (ball.ycor() < -240 and ball.ycor() > -260) and (ball.xcor() > paddle.xcor() -50 and ball.xcor() < paddle.xcor() -10):
         ball.setheading(20 - ball.heading())
 
-    if (ball.ycor() < -240 and ball.ycor() > -260) and (ball.xcor() < paddle.xcor() +10 and ball.xcor() > paddle.xcor() -10):
+    if (ball.ycor() < -240 and ball.ycor() > -260) and (ball.xcor() < paddle.xcor() +9.9 and ball.xcor() > paddle.xcor() -9.9):
         ball.setheading(0 - ball.heading())
