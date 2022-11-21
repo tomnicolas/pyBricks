@@ -35,18 +35,18 @@ ball.color('white')
 ball.penup()
 ball.goto(0,-239)
 ball.setheading(random.randint(20,160))
-ballspeed = 0.1
+ballspeed = 0.18
 
 # Score
-
-score = turtle.Turtle()
-score.speed(0)
-score.color("white")
-score.shape("blank")
-score.penup()
-score.setposition(320,260)
-score.pendown()
-score.write("Score = 0", align = "center", font = ("Fira code", 12))
+score = 15
+scoreT = turtle.Turtle()
+scoreT.speed(0)  
+scoreT.color("grey")
+scoreT.shape("blank")
+scoreT.penup()
+scoreT.setposition(280,260)
+scoreT.pendown()
+scoreT.write("Score = " + str(score), font = ("Fira code", 12))
 
 # Start message
 
@@ -55,13 +55,15 @@ startmessage.speed(0)
 startmessage.color("white")
 startmessage.shape("blank")
 startmessage.penup()
-startmessage.setposition(0,0)
+startmessage.setposition(0,-30)
 startmessage.pendown()
-startmessage.write("Press SPACE To Start, \n\nUse the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
+startmessage.write("            Press SPACE To Start, \n\nUse the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
 
 # Bricks
 
 def makeRow(x,y):
+    global row
+    row = []
     for i in range(8):
         brick = turtle.Turtle()
         brick.speed(0)
@@ -71,24 +73,30 @@ def makeRow(x,y):
         brick.penup()
         brick.goto(x + 95*i,y)
         brick.pendown()
+        row.append(brick)
+    return row
 
-makeRow(-335,230)
-makeRow(-335,180)
-makeRow(-335,130)
+row1 = makeRow(-335,230)
+row2 = makeRow(-335,180)
+row3 = makeRow(-335,130)
 
 # Functions 
+deltax = 10
 
 def paddle_left():
     if paddle.xcor() > -350:
         x = paddle.xcor()
-        x += -10
+        x += -deltax
         paddle.setx(x)
 
 def paddle_right():
-    if paddle.xcor() < 350:
+    if paddle.xcor() < 345:
         x = paddle.xcor()
-        x += 10
+        x += deltax
         paddle.setx(x)
+
+""" def collisionBrick():
+    if ball.xcor() """
 
 def start_game():
     global gameContinue
@@ -100,7 +108,10 @@ def restart_game():
     ball.setheading(random.randint(20,160))
     global gameContinue
     gameContinue = False
-    startmessage.write("GAME OVER,\nto Restart, press SPACE,\nto Quit, press ESC", align = "center", font = ("Fira code", 12))
+    startmessage.penup()
+    startmessage.setposition(0,-70)
+    startmessage.pendown()
+    startmessage.write("       GAME OVER,\n\nto Restart, press SPACE,\n\n   to Quit, press ESC", align = "center", font = ("Fira code", 12))
 
 def quit_game():
     global GAME
@@ -138,7 +149,7 @@ while GAME:
     if ball.ycor() < -300:
         restart_game()
     
-    if ball.xcor() < -390 or ball.xcor() > 390:
+    if ball.xcor() < -395 or ball.xcor() > 390:
         ball.setheading(180 - ball.heading())
 
     # Paddle and Ball collisions
