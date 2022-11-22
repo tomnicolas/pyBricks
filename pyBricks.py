@@ -38,7 +38,7 @@ ball.setheading(random.randint(20,160))
 ballspeed = 0.18
 
 # Score
-score = 15
+score = 0
 scoreT = turtle.Turtle()
 scoreT.speed(0)  
 scoreT.color("grey")
@@ -80,23 +80,41 @@ row1 = makeRow(-335,230)
 row2 = makeRow(-335,180)
 row3 = makeRow(-335,130)
 
+print(row1)
+
 # Functions 
-deltax = 10
+
+def collisionBrick(row):
+    global score
+    for brick in row:
+        if ((brick.ycor() - 25) < ball.ycor() < (brick.ycor() + 25) and (brick.xcor() - 35) < ball.xcor() < (brick.xcor() + 35)):
+            if ((ball.ycor() < brick.ycor() - 20) or (ball.ycor() > brick.ycor() + 20)):
+                ball.setheading(360 - ball.heading())
+            if ((ball.xcor() < brick.xcor() - 30) or (ball.xcor() > brick.xcor() + 30)):
+                ball.setheading(180 - ball.heading())
+            
+            brick.clear()
+            brick.penup()
+            brick.goto(1000, 1000)
+            row.remove(brick)
+            score += 5
+            wn.update()
+            return score
+
+
+deltaPaddle = 20
 
 def paddle_left():
     if paddle.xcor() > -350:
         x = paddle.xcor()
-        x += -deltax
+        x += -deltaPaddle
         paddle.setx(x)
 
 def paddle_right():
-    if paddle.xcor() < 345:
+    if paddle.xcor() < 340:
         x = paddle.xcor()
-        x += deltax
+        x += deltaPaddle
         paddle.setx(x)
-
-""" def collisionBrick():
-    if ball.xcor() """
 
 def start_game():
     global gameContinue
@@ -111,7 +129,7 @@ def restart_game():
     startmessage.penup()
     startmessage.setposition(0,-70)
     startmessage.pendown()
-    startmessage.write("       GAME OVER,\n\nto Restart, press SPACE,\n\n   to Quit, press ESC", align = "center", font = ("Fira code", 12))
+    startmessage.write("       GAME OVER,\n\npress SPACE to Restart,\n\n   press ESC, to Quit.", align = "center", font = ("Fira code", 12))
 
 def quit_game():
     global GAME
@@ -151,6 +169,12 @@ while GAME:
     
     if ball.xcor() < -395 or ball.xcor() > 390:
         ball.setheading(180 - ball.heading())
+
+    # Collisions with Bricks
+
+    collisionBrick(row1)
+    collisionBrick(row2)
+    collisionBrick(row3)
 
     # Paddle and Ball collisions
 
