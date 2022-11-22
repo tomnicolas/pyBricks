@@ -38,15 +38,16 @@ ball.setheading(random.randint(20,160))
 ballspeed = 0.18
 
 # Score
+
 score = 0
-scoreT = turtle.Turtle()
-scoreT.speed(0)  
-scoreT.color("grey")
-scoreT.shape("blank")
-scoreT.penup()
-scoreT.setposition(280,260)
-scoreT.pendown()
-scoreT.write("Score = " + str(score), font = ("Fira code", 12))
+scoreText = turtle.Turtle()
+scoreText.speed(0)  
+scoreText.color("grey")
+scoreText.shape("blank")
+scoreText.penup()
+scoreText.setposition(280,260)
+scoreText.pendown()
+scoreText.write("Score = " + str(score), font = ("Fira code", 12))
 
 # Start message
 
@@ -80,12 +81,10 @@ row1 = makeRow(-335,230)
 row2 = makeRow(-335,180)
 row3 = makeRow(-335,130)
 
-print(row1)
-
 # Functions 
 
 def collisionBrick(row):
-    global score
+    global score, ballspeed
     for brick in row:
         if ((brick.ycor() - 25) < ball.ycor() < (brick.ycor() + 25) and (brick.xcor() - 35) < ball.xcor() < (brick.xcor() + 35)):
             if ((ball.ycor() < brick.ycor() - 20) or (ball.ycor() > brick.ycor() + 20)):
@@ -97,10 +96,16 @@ def collisionBrick(row):
             brick.penup()
             brick.goto(1000, 1000)
             row.remove(brick)
-            score += 5
+            score = updateScore(score)
+            ballspeed = ballspeed + 0.005
             wn.update()
-            return score
+            return ballspeed
 
+def updateScore(score):
+  score += 5
+  scoreText.clear()
+  scoreText.write("Score = " + str(score), font = ("Fira code", 12))
+  return score
 
 deltaPaddle = 20
 
