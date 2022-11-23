@@ -235,7 +235,6 @@ wn.update()
 GAME = True
 gameContinue = False
 
-
 # Main Loop  
 
 while GAME:
