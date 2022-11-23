@@ -58,7 +58,7 @@ startmessage.shape("blank")
 startmessage.penup()
 startmessage.setposition(0,0)
 startmessage.pendown()
-startmessage.write("Press SPACE To Start,", align = "center", font = ("Fira code", 24))
+startmessage.write("Press SPACE To Start", align = "center", font = ("Fira code", 24))
 
 # Info message
 
@@ -67,7 +67,7 @@ infomessage.speed(0)
 infomessage.color("white")
 infomessage.shape("blank")
 infomessage.penup()
-infomessage.setposition(0,-30)
+infomessage.setposition(0,-40)
 infomessage.pendown()
 infomessage.write("Use the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
 
@@ -88,10 +88,6 @@ def makeRow(x,y):
         row.append(brick)
     return row
 
-row1 = makeRow(-352,230)
-row2 = makeRow(-352,190)
-row3 = makeRow(-352,150)
-
 # Functions 
 
 def collisionBrick(row):
@@ -105,33 +101,38 @@ def collisionBrick(row):
             brick.clear()
             brick.penup()
             brick.goto(1000, 1000)
-            ballspeed += 0.005
-            score += 5
+            ballspeed += 0.008
+            score += 5 
             scoreText.clear()
             scoreText.write("Score = " + str(score), font = ("Fira code", 12))
             wn.update()
             return ballspeed, score
 
-def hideBricks(row):
+row1 = makeRow(-352,230)
+row2 = makeRow(-352,190)
+row3 = makeRow(-352,150)
+
+def resetBricks(row):
     for brick in row:
-        brick.penup()
-        brick.goto(1000, 1000)
+        if brick.undobufferentries() < 6:
+           brick.undo() 
+        wn.update()
 
 def collisionPaddle():
-    if (ball.ycor() < -240 and ball.ycor() > -241) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
+    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
         ball.setheading(-20 - ball.heading())
 
-    if (ball.ycor() < -240 and ball.ycor() > -241) and (ball.xcor() > paddle.xcor() -50 and ball.xcor() < paddle.xcor() -10):
+    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() > paddle.xcor() -50 and ball.xcor() < paddle.xcor() -10):
         ball.setheading(20 - ball.heading())
 
-    if (ball.ycor() < -240 and ball.ycor() > -241) and (ball.xcor() < paddle.xcor() +9.99 and ball.xcor() > paddle.xcor() -9.99):
+    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +9.99 and ball.xcor() > paddle.xcor() -9.99):
         ball.setheading(0 - ball.heading())
 
 def collisionWall():
     if ball.ycor() > 295:
         ball.setheading(360 - ball.heading())    
     if ball.ycor() < -300:
-        restartGame()    
+        gameOver()    
     if ball.xcor() < -395 or ball.xcor() > 390:
         ball.setheading(180 - ball.heading())
   
@@ -148,45 +149,74 @@ def paddleMoveRight():
         paddle.setx(x)
 
 def startGame():
+    global gameContinue
     startmessage.clear()
     infomessage.clear()
-    global gameContinue
+    ball.setheading(random.randint(20,160))
     gameContinue = True
 
 def restartGame():
-    global gameContinue
-    gameContinue = False
-    paddle.ht()
-    ball.ht()
-    hideBricks(row1)
-    hideBricks(row2)
-    hideBricks(row3)
+    global score, ballspeed
+    score = 0
+    ballspeed = 0.2
+    resetBricks(row1)
+    resetBricks(row2)
+    resetBricks(row3)
+    paddle.goto(0,-250)
+    paddle.st()
+    ball.goto(0,-239)   
+    ball.st()
     scoreText.clear()
     scoreText.write("Score = " + str(score), font = ("Fira code", 12, 'normal'))
+    startmessage.clear()          
+    startmessage.penup()
+    startmessage.setposition(0,0)
+    startmessage.pendown()
+    startmessage.write("Press SPACE To Start", align = "center", font = ("Fira code", 24))
+    infomessage.clear()
+    infomessage.penup()
+    infomessage.setposition(0,-40)
+    infomessage.pendown()
+    infomessage.write("Use the keys <- and -> to move LEFT or RIGHT", align = "center", font = ("Fira code", 12))
+    wn.update()
+    wn.listen()
+    return score, ballspeed
+
+
+def gameOver():
+    global gameContinue
+    gameContinue = False
+    restartGame()
     startmessage.clear()
     startmessage.penup()
     startmessage.setposition(0,10)
     startmessage.pendown()
-    startmessage.write("GAME OVER,", align = "center", font = ("Fira code", 32,'normal'))
+    startmessage.write("GAME OVER", align = "center", font = ("Fira code", 32,'normal'))
     infomessage.clear()
     infomessage.penup()
     infomessage.setposition(0,-70)
     infomessage.pendown()
-    infomessage.write("press ESC, to Quit.", align = "center", font = ("Fira code", 12,'normal'))
+    infomessage.write("Press SPACE to try again\n\n   Press ESC to Quit", align = "center", font = ("Fira code", 12,'normal')) 
+    wn.update()
 
-def winGame():
-    paddle.ht()
+def gameWin():
+    global gameContinue
+    gameContinue = False
     ball.ht()
+    paddle.ht()
     startmessage.clear()
     startmessage.penup()
-    startmessage.setposition(0,0)
+    startmessage.setposition(0,10)
     startmessage.pendown()
     startmessage.write("YOU WIN !", align = "center", font = ("Fira code", 32, 'normal'))
     infomessage.clear()
     infomessage.penup()
-    infomessage.setposition(0,-50)
+    infomessage.setposition(0,-70)
     infomessage.pendown()
-    infomessage.write("press ESC, to Quit.", align = "center", font = ("Fira code", 12,'normal'))    
+    infomessage.write("Press 'R' to try again\n\n  Press ESC to Quit", align = "center", font = ("Fira code", 12,'normal'))
+    wn.listen()
+    wn.update()
+    
 
 def quitGame():
     global GAME
@@ -198,6 +228,7 @@ wn.onkeypress(paddleMoveLeft, 'Left')
 wn.onkeypress(paddleMoveRight, 'Right')
 wn.onkeypress(startGame, 'space')
 wn.onkeypress(quitGame, 'Escape')
+wn.onkeypress(restartGame, 'r')
 wn.listen()
 wn.update()
 
@@ -215,8 +246,8 @@ while GAME:
         ball.forward(ballspeed)
 
     if score == 150:
-        winGame()
-
+        gameWin()
+    
     collisionPaddle()
     collisionWall()
     collisionBrick(row1)
