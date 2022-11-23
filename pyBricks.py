@@ -44,7 +44,7 @@ scoreText.speed(0)
 scoreText.color("grey")
 scoreText.shape("blank")
 scoreText.penup()
-scoreText.setposition(280,260)
+scoreText.setposition(275,260)
 scoreText.pendown()
 scoreText.write("Score = " + str(score), font = ("Fira code", 12))
 
@@ -108,13 +108,17 @@ def collisionBrick(row):
             return ballspeed, score
 
 def collisionPaddle():
-    if (ball.ycor() < -240 and ball.ycor() > -260) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
+    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
         ball.setheading(-20 - ball.heading())
+        if ((ball.xcor() < paddle.xcor() - 37) or (ball.xcor() > paddle.xcor() + 37)):
+            ball.setheading(180 - ball.heading())
 
     if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() > paddle.xcor() -50 and ball.xcor() < paddle.xcor() -10):
         ball.setheading(20 - ball.heading())
+        if ((ball.xcor() < paddle.xcor() - 37) or (ball.xcor() > paddle.xcor() + 37)):
+            ball.setheading(180 - ball.heading())
 
-    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +9.99 and ball.xcor() > paddle.xcor() -9.99):
+    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +10 and ball.xcor() > paddle.xcor() -10):
         ball.setheading(0 - ball.heading())
 
 def collisionWall():
@@ -126,13 +130,13 @@ def collisionWall():
         ball.setheading(180 - ball.heading())
   
 def paddleMoveLeft():
-    if paddle.xcor() > -350:
+    if paddle.xcor() > -345:
         x = paddle.xcor()
         x += -deltaPaddle
         paddle.setx(x)
 
 def paddleMoveRight():
-    if paddle.xcor() < 340:
+    if paddle.xcor() < 335:
         x = paddle.xcor()
         x += deltaPaddle
         paddle.setx(x)
