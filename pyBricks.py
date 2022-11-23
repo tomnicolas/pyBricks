@@ -24,7 +24,6 @@ ball.color('white')
 ball.penup()
 ball.goto(0,-239)
 ball.setheading(random.randint(20,160))
-ballspeed = 0.2
 
 # Paddle
 
@@ -80,10 +79,10 @@ def makeRow(x,y):
         brick = turtle.Turtle()
         brick.speed(0)
         brick.shape('square')
-        brick.shapesize(stretch_len=3.5, stretch_wid=1.5)
+        brick.shapesize(stretch_len=3.8, stretch_wid=1.5)
         brick.color('white')
         brick.penup()
-        brick.goto(x + 78*i,y)
+        brick.goto(x + 79*i,y)
         brick.pendown()
         row.append(brick)
     return row
@@ -93,10 +92,10 @@ def makeRow(x,y):
 def collisionBrick(row):
     global score, ballspeed
     for brick in row:
-        if ((brick.ycor() - 25) < ball.ycor() < (brick.ycor() + 25) and (brick.xcor() - 35) < ball.xcor() < (brick.xcor() + 35)):
+        if ((brick.ycor() - 25) < ball.ycor() < (brick.ycor() + 25) and (brick.xcor() - 38) < ball.xcor() < (brick.xcor() + 38)):
             if ((ball.ycor() < brick.ycor() - 24) or (ball.ycor() > brick.ycor() + 24)):
                 ball.setheading(360 - ball.heading())
-            if ((ball.xcor() < brick.xcor() - 34) or (ball.xcor() > brick.xcor() + 34)):
+            if ((ball.xcor() < brick.xcor() - 37) or (ball.xcor() > brick.xcor() + 37)):
                 ball.setheading(180 - ball.heading())
             brick.clear()
             brick.penup()
@@ -108,18 +107,8 @@ def collisionBrick(row):
             wn.update()
             return ballspeed, score
 
-row1 = makeRow(-352,230)
-row2 = makeRow(-352,190)
-row3 = makeRow(-352,150)
-
-def resetBricks(row):
-    for brick in row:
-        if brick.undobufferentries() < 6:
-           brick.undo() 
-        wn.update()
-
 def collisionPaddle():
-    if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
+    if (ball.ycor() < -240 and ball.ycor() > -260) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
         ball.setheading(-20 - ball.heading())
 
     if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() > paddle.xcor() -50 and ball.xcor() < paddle.xcor() -10):
@@ -154,6 +143,12 @@ def startGame():
     infomessage.clear()
     ball.setheading(random.randint(20,160))
     gameContinue = True
+
+def resetBricks(row):
+    for brick in row:
+        if brick.undobufferentries() < 6:
+           brick.undo() 
+        wn.update()
 
 def restartGame():
     global score, ballspeed
@@ -232,8 +227,15 @@ wn.onkeypress(restartGame, 'r')
 wn.listen()
 wn.update()
 
+# Settings
+
 GAME = True
 gameContinue = False
+row1 = makeRow(-358,230)
+row2 = makeRow(-358,197)
+row3 = makeRow(-358,164)
+ballspeed = 0.2
+deltaPaddle = 20
 
 # Main Loop  
 
