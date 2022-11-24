@@ -4,7 +4,6 @@
 import turtle
 import random
 
-
 # Window Setup
 
 wn = turtle.Screen()
@@ -72,7 +71,8 @@ infomessage.write("Use the keys <- and -> to move LEFT or RIGHT", align = "cente
 
 # Bricks
         
-def makeRow(x,y):
+def make_row(x,y):
+    # Make a ROW of bricks in range() starting at the x and y position
     global row
     row = []
     for i in range(10):
@@ -89,7 +89,8 @@ def makeRow(x,y):
 
 # Functions 
 
-def collisionBrick(row):
+def collision_brick(row):
+    # If the Ball collide with a Brick, the ball bounce, score and ballspeed increase and brick move outside the screen
     global score, ballspeed
     for brick in row:
         if ((brick.ycor() - 25) < ball.ycor() < (brick.ycor() + 25) and (brick.xcor() - 38) < ball.xcor() < (brick.xcor() + 38)):
@@ -107,7 +108,8 @@ def collisionBrick(row):
             wn.update()
             return ballspeed, score
 
-def collisionPaddle():
+def collision_paddle():
+    # If the Ball collide withe the Paddle, the ball bounce
     if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +50 and ball.xcor() > paddle.xcor() +10):
         ball.setheading(-20 - ball.heading())
         if ((ball.xcor() < paddle.xcor() - 37) or (ball.xcor() > paddle.xcor() + 37)):
@@ -121,46 +123,52 @@ def collisionPaddle():
     if (ball.ycor() < -240 and ball.ycor() > -250) and (ball.xcor() < paddle.xcor() +10 and ball.xcor() > paddle.xcor() -10):
         ball.setheading(0 - ball.heading())
 
-def collisionWall():
+def collision_wall():
+    # If the Ball collide withe the borders of the screen, the ball bounce
     if ball.ycor() > 295:
         ball.setheading(360 - ball.heading())    
     if ball.ycor() < -300:
-        gameOver()    
+        game_over()    
     if ball.xcor() < -395 or ball.xcor() > 390:
         ball.setheading(180 - ball.heading())
   
-def paddleMoveLeft():
+def paddle_move_left():
+    # Paddle move Left
     if paddle.xcor() > -345:
         x = paddle.xcor()
         x += -deltaPaddle
         paddle.setx(x)
 
-def paddleMoveRight():
+def paddle_move_right():
+    # Paddle move Right
     if paddle.xcor() < 335:
         x = paddle.xcor()
         x += deltaPaddle
         paddle.setx(x)
 
-def startGame():
+def start_game():
+    # Delete messages on screen and start the game
     global gameContinue
     startmessage.clear()
     infomessage.clear()
     ball.setheading(random.randint(20,160))
     gameContinue = True
 
-def resetBricks(row):
+def reset_bricks(row):
+    # Replace all the collided bricks at their original places
     for brick in row:
         if brick.undobufferentries() < 6:
            brick.undo() 
         wn.update()
 
-def restartGame():
+def restart_game():
+    # Reset all the components at original state
     global score, ballspeed
     score = 0
     ballspeed = 0.2
-    resetBricks(row1)
-    resetBricks(row2)
-    resetBricks(row3)
+    reset_bricks(row1)
+    reset_bricks(row2)
+    reset_bricks(row3)
     paddle.goto(0,-250)
     paddle.st()
     ball.goto(0,-239)   
@@ -182,10 +190,11 @@ def restartGame():
     return score, ballspeed
 
 
-def gameOver():
+def game_over():
+    # Game over message and restart the game
     global gameContinue
     gameContinue = False
-    restartGame()
+    restart_game()
     startmessage.clear()
     startmessage.penup()
     startmessage.setposition(0,10)
@@ -198,7 +207,8 @@ def gameOver():
     infomessage.write("Press SPACE to try again\n\n   Press ESC to Quit", align = "center", font = ("Fira code", 12,'normal')) 
     wn.update()
 
-def gameWin():
+def game_win():
+    # You win message, ask if the player want to restart the game
     global gameContinue
     gameContinue = False
     ball.ht()
@@ -214,20 +224,20 @@ def gameWin():
     infomessage.pendown()
     infomessage.write("Press 'R' to try again\n\n  Press ESC to Quit", align = "center", font = ("Fira code", 12,'normal'))
     wn.listen()
-    wn.update()
-    
+    wn.update()    
 
-def quitGame():
+def quit_game():
+    # Close the window, end the game
     global GAME
     GAME = False
 
 # Keyboard binding
 
-wn.onkeypress(paddleMoveLeft, 'Left')
-wn.onkeypress(paddleMoveRight, 'Right')
-wn.onkeypress(startGame, 'space')
-wn.onkeypress(quitGame, 'Escape')
-wn.onkeypress(restartGame, 'r')
+wn.onkeypress(paddle_move_left, 'Left')
+wn.onkeypress(paddle_move_right, 'Right')
+wn.onkeypress(start_game, 'space')
+wn.onkeypress(quit_game, 'Escape')
+wn.onkeypress(restart_game, 'r')
 wn.listen()
 wn.update()
 
@@ -235,9 +245,9 @@ wn.update()
 
 GAME = True
 gameContinue = False
-row1 = makeRow(-358,230)
-row2 = makeRow(-358,197)
-row3 = makeRow(-358,164)
+row1 = make_row(-358,230)
+row2 = make_row(-358,197)
+row3 = make_row(-358,164)
 ballspeed = 0.2
 deltaPaddle = 20
 
@@ -247,16 +257,19 @@ while GAME:
 
     wn.update()
 
-    if gameContinue:                # Start the Ball
+    if gameContinue:                
+        # Start the Ball
         ball.forward(ballspeed)
 
     if score == 150:
-        gameWin()
+        # Condition for winning the game
+        game_win()
     
-    collisionPaddle()
-    collisionWall()
-    collisionBrick(row1)
-    collisionBrick(row2)
-    collisionBrick(row3)
+    # Collisions surveillance
+    collision_paddle()
+    collision_wall()
+    collision_brick(row1)
+    collision_brick(row2)
+    collision_brick(row3)
 
 wn.update()
